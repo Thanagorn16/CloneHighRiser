@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        //flip player
+        //flip player if it hit the wall of the building
         if(other.tag == "Side")
         {
             moveSpeed = -moveSpeed;
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
             //however, since we make sure that the player can jump once at a time, the below is enough
             rb.velocity += new Vector2(0f, jumpSpeed);
             SetAllCollidersState(false);
-            StartCoroutine(ReturnCollisions(true));
+            StartCoroutine(ReturnColliders(true));
         }
     }
 
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator ReturnCollisions(bool active) //set time before re-active the colliders
+    IEnumerator ReturnColliders(bool active) //set time before re-active the colliders
     {
         yield return new WaitForSeconds(delay);
 
