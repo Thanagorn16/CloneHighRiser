@@ -7,9 +7,11 @@ public class Player : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 3f;
     [SerializeField] float jumpSpeed = 1f;
-    [SerializeField] float delay = 1f;
+    [SerializeField] float delayCollider = 1f;
+    [SerializeField] Animator myAnimator;
     Rigidbody2D rb; 
     CapsuleCollider2D bodyCollider;
+    bool isRunning = true;
 
     void Start()
     {
@@ -24,7 +26,28 @@ public class Player : MonoBehaviour
 
     void Run()
     {
-        transform.Translate(new Vector2(moveSpeed,0) * Time.deltaTime);
+        if(isRunning)
+        {
+            transform.Translate(new Vector2(moveSpeed,0) * Time.deltaTime);
+        }
+        else
+        {
+            rb.velocity = Vector2.zero;
+            myAnimator.SetBool("isIdling", true);
+        }
+        // transform.Translate(new Vector2(moveSpeed,0) * Time.deltaTime);
+
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if(other.gameObject.tag == "Goal")   
+        {
+            // print("hit goal: " + rb.velocity);
+            // rb.velocity = Vector2.zero;
+            // print("after: " + rb.velocity);
+            isRunning = false;
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -64,7 +87,7 @@ public class Player : MonoBehaviour
 
     IEnumerator ReturnColliders(bool active) //set time before re-active the colliders
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(delayCollider);
 
         foreach(Collider2D collider in GetComponents<Collider2D>())
         {
