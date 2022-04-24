@@ -13,20 +13,16 @@ public class Player : MonoBehaviour
     CapsuleCollider2D bodyCollider;
     bool isRunning = true;
     GameSession gameSession;
-    // IEnumerator coroutine;
     Coroutine coroutine;
+
     void Awake()
     {
         bodyCollider = GetComponent<CapsuleCollider2D>();
         gameSession = FindObjectOfType<GameSession>();
-        // coroutine = StartCoroutine(OutOfBuiding());
     }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        // bodyCollider = GetComponent<CapsuleCollider2D>();
-        // coroutine = StartCoroutine(OutOfBuiding());
-        // coroutine = OutOfBuiding();
     }
 
     void Update()
@@ -45,8 +41,6 @@ public class Player : MonoBehaviour
             rb.velocity = Vector2.zero;
             myAnimator.SetBool("isIdling", true);
         }
-        // transform.Translate(new Vector2(moveSpeed,0) * Time.deltaTime);
-
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -82,18 +76,9 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(gameSession.OffFloorTime);
 
             gameSession.LoseHealth();
+            // print(gameSession.health);
         }
     }
-
-    // IEnumerator InBuilding()
-    // {
-    //     if(bodyCollider.IsTouchingLayers(LayerMask.GetMask("Floor")))
-    //     {
-    //         yield return new WaitForSeconds(0);
-    //         StopCoroutine(OutOfBuiding());
-    //         print("in the buidling");
-    //     }
-    // }
 
     void OnTriggerEnter2D(Collider2D other)
     {
