@@ -12,11 +12,21 @@ public class Player : MonoBehaviour
     Rigidbody2D rb; 
     CapsuleCollider2D bodyCollider;
     bool isRunning = true;
-
+    GameSession gameSession;
+    // IEnumerator coroutine;
+    Coroutine coroutine;
+    void Awake()
+    {
+        bodyCollider = GetComponent<CapsuleCollider2D>();
+        gameSession = FindObjectOfType<GameSession>();
+        // coroutine = StartCoroutine(OutOfBuiding());
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        bodyCollider = GetComponent<CapsuleCollider2D>();
+        // bodyCollider = GetComponent<CapsuleCollider2D>();
+        // coroutine = StartCoroutine(OutOfBuiding());
+        // coroutine = OutOfBuiding();
     }
 
     void Update()
@@ -41,14 +51,49 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if(other.gameObject.tag == "Goal")   
+        if(other.gameObject.tag == "Goal") //stop running if reach the goal
         {
-            // print("hit goal: " + rb.velocity);
-            // rb.velocity = Vector2.zero;
-            // print("after: " + rb.velocity);
             isRunning = false;
         }
+
+        if(bodyCollider.IsTouchingLayers(LayerMask.GetMask("Floor", "Goal")) && coroutine != null) //stop coroutine for deducting player's life
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+
     }
+
+    void OnCollisionExit2D(Collision2D other)
+    {
+        if(!bodyCollider.IsTouchingLayers(LayerMask.GetMask("Floor", "Goal")) && coroutine == null) 
+        {
+            coroutine = StartCoroutine(OutOfBuiding());
+        }
+        // print("in exit");
+        // coroutine = StartCoroutine(OutOfBuiding());
+        // StartCoroutine(OutOfBuiding());
+    }
+
+    IEnumerator OutOfBuiding()// if player is not touching floor for a certain period --> lose life
+    {
+        if(!bodyCollider.IsTouchingLayers(LayerMask.GetMask("Floor")))
+        {
+            yield return new WaitForSeconds(gameSession.OffFloorTime);
+
+            gameSession.LoseHealth();
+        }
+    }
+
+    // IEnumerator InBuilding()
+    // {
+    //     if(bodyCollider.IsTouchingLayers(LayerMask.GetMask("Floor")))
+    //     {
+    //         yield return new WaitForSeconds(0);
+    //         StopCoroutine(OutOfBuiding());
+    //         print("in the buidling");
+    //     }
+    // }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -77,6 +122,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // this method is not quite efficient. Will work on new one later
     void SetAllCollidersState(bool active) // disable all of the collisions of the gameObject
     {
         foreach(Collider2D collider in GetComponents<Collider2D>())
