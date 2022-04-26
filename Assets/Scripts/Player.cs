@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
         // StartCoroutine(OutOfBuiding());
     }
 
-    IEnumerator OutOfBuiding()// if player is not touching floor for a certain period --> lose life
+    IEnumerator OutOfBuiding()// if player is not touching floor for a certain period --> lose one life point
     {
         if(!bodyCollider.IsTouchingLayers(LayerMask.GetMask("Floor")))
         {

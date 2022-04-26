@@ -6,9 +6,11 @@ using TMPro;
 
 public class GameSession : MonoBehaviour
 {
-    public int health = 3;
+    [SerializeField] int health = 3;
     public float OffFloorTime = 5f;
     [SerializeField] TextMeshProUGUI liveText;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] int score = 0;
     
 
     void Awake() // this is singleton pattern
@@ -28,6 +30,7 @@ public class GameSession : MonoBehaviour
     void Start()
     {
         liveText.text = health.ToString("Live : " + health);
+        scoreText.text = score.ToString("Score : " + score);
     }
 
     public int CurrentHealth()
@@ -48,9 +51,12 @@ public class GameSession : MonoBehaviour
         {
             ResetGameSession();
         }
-        // health--;
-        // int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        // SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    public void AddScore(int coinValue)
+    {
+        score += coinValue;
+        scoreText.text = "Score : " + score.ToString(); // this way of converting int to string is more efficient and has a lesser chance to create bug than the way I do in LostHealth.
     }
 
     void ResetGameSession()
