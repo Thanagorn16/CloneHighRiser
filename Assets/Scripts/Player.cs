@@ -64,9 +64,6 @@ public class Player : MonoBehaviour
         {
             coroutine = StartCoroutine(OutOfBuiding());
         }
-        // print("in exit");
-        // coroutine = StartCoroutine(OutOfBuiding());
-        // StartCoroutine(OutOfBuiding());
     }
 
     IEnumerator OutOfBuiding()// if player is not touching floor for a certain period --> lose one life point
@@ -76,7 +73,6 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(gameSession.OffFloorTime);
 
             gameSession.LoseHealth();
-            // print(gameSession.health);
         }
     }
 
