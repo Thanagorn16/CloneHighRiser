@@ -5,15 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] float loadSceneDelay;
+    void OnCollisionEnter2D(Collision2D other)
     {
-        
+        print("enter");
+        StartCoroutine(LoadNextLevel());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator LoadNextLevel()
     {
-        
+        yield return new WaitForSeconds(loadSceneDelay);
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+
+        if(nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
+
+        FindObjectOfType<ScenePersist>().ResetScenePersist();
+        SceneManager.LoadScene(nextSceneIndex);
     }
 }
